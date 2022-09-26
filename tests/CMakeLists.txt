@@ -8,7 +8,8 @@ set(SourceFiles
 )
 
 set(TestsFiles
-	test.cpp
+	InvertedIndexTest.cpp
+	SearchServerTest.cpp
 )
 
 add_executable(googleTests ${TestsFiles} ${SourceFiles})
