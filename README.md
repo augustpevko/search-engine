@@ -19,7 +19,7 @@ Application for searching queries in local files.
 - [JSON](https://github.com/nlohmann/json) - JSON for modern C++.
 - [Google test](https://github.com/google/googletest) - unit tests.
 
-### How to build searchEngine.
+## How to build searchEngine.
 1. Create directory for build:
 ```
 mkdir build && cd build
@@ -28,8 +28,8 @@ mkdir build && cd build
 ```
 cmake .. && cmake --build . --config Release --target searchEngine
 ```
-The execution file will be placed in the bin directory.
-### How to build googleTests.
+- The execution file will be placed in the bin directory.
+## How to build googleTests.
 1. Create directory for build:
 ```
 mkdir build && cd build
@@ -38,8 +38,8 @@ mkdir build && cd build
 ```
 cmake .. && cmake --build . --config Release --target googleTests
 ```
-The execution file will be placed in the tests directory, but you can run tests by using command:
+- The execution file will be placed in the tests directory, but you can run tests by using command:
 ```
 ctest
 ```
-in build directory.
+- in build directory.
