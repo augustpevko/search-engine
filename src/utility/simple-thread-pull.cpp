@@ -1,18 +1,15 @@
 #include "simple-thread-pull.hpp"
 
-ThreadPool::ThreadPool() {
-    if (COUNT_OF_THREADS > std::thread::hardware_concurrency() || COUNT_OF_THREADS <= 0)
-        throw std::invalid_argument("Count of threads is invalid");
-        
-    threads.reserve(COUNT_OF_THREADS);
-    for (uint32_t i = 0; i < COUNT_OF_THREADS; i++) {
+ThreadPool::ThreadPool(): maxThreads(std::thread::hardware_concurrency()) {       
+    threads.reserve(maxThreads);
+    for (uint32_t i = 0; i < maxThreads; i++) {
         threads.emplace_back(&ThreadPool::ThreadLoop, this);
     }
 }
 
 ThreadPool::~ThreadPool() {
     quite = true;
-    q_cv.notify_all();
+    qCv.notify_all();
     for (auto& t: threads) {
         t.join();
     }
@@ -21,7 +18,7 @@ ThreadPool::~ThreadPool() {
 void ThreadPool::ThreadLoop() {
     while (!quite) {
         std::unique_lock<std::mutex> lock(qMutex);
-        q_cv.wait(lock, [this]()->bool {return !tasks.empty() || quite;});
+        qCv.wait(lock, [this]()->bool {return !tasks.empty() || quite;});
         if (!tasks.empty() && !quite) {
             std::function<void ()> task = std::move(tasks.front());
             tasks.pop();
@@ -33,14 +30,14 @@ void ThreadPool::ThreadLoop() {
 
 void ThreadPool::waitAll() {
     quite = true;
-    q_cv.notify_all();
+    qCv.notify_all();
     for (auto& t: threads) {
         t.join();
     }
     quite = false;
     threads.clear();
 
-    for (uint32_t i = 0; i < COUNT_OF_THREADS; i++) {
+    for (uint32_t i = 0; i < maxThreads; i++) {
         threads.emplace_back(&ThreadPool::ThreadLoop, this);
     }
 }

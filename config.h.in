@@ -1,2 +1,1 @@
 #cmakedefine VERSION "@VERSION@"
-#cmakedefine COUNT_OF_THREADS @COUNT_OF_THREADS@

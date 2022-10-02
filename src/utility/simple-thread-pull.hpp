@@ -21,7 +21,7 @@ class ThreadPool {
 public:
     /**
      * @brief Construct a new Thread Pool object.
-     * Count of active threads is defined in config.json.
+     * Count of active threads is defined by call std::thread::hardware_concurrency().
      * 
      */
     ThreadPool();
@@ -51,7 +51,7 @@ public:
         std::unique_lock<std::mutex> lock(qMutex);
         tasks.push(task);
         lock.unlock();
-        q_cv.notify_one();
+        qCv.notify_one();
     }
     /**
      * @brief wait for all functions to finish.
@@ -66,9 +66,10 @@ private:
      */
     void ThreadLoop();
 
+    size_t maxThreads{1};
     std::atomic<bool> quite{false};
     std::mutex qMutex;                 
-    std::condition_variable q_cv; 
+    std::condition_variable qCv; 
     std::vector<std::thread> threads;
     std::queue<Func> tasks;
 };

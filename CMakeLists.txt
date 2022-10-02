@@ -4,8 +4,6 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(VERSION "0.1.0")
 
-set(COUNT_OF_THREADS 4)
-
 configure_file (config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/include/config.hpp @ONLY)
 
 set(MY_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
