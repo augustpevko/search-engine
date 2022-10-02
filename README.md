@@ -34,7 +34,7 @@ cmake .. && cmake --build . --config Release --target searchEngine
 ```
 mkdir build && cd build
 ```
-2. Build search engine with CMake:
+2. Build google tests with CMake:
 ```
 cmake .. && cmake --build . --config Release --target googleTests
 ```
