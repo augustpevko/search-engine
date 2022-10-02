@@ -7,12 +7,12 @@ Application for searching queries in local files.
 2. User enters queries in `request.json`.
 3. User gets results in `answers.json`.
 
-You can change max responces in `config.json`.
-The structure of the `answer.json` file:
+- You can change max responces in `config.json`.
+- The structure of the `answer.json` file:
 1. `request[N]` - request number N in `request.json`.
 2. `relevance` contains:
-`docid` - number of .txt file in `config.json`.
-`rank` - relative rank considering other files.
+- `docid` - number of .txt file in `config.json`.
+- `rank` - relative rank considering other files.
 3. `result` - found or not found.
 
 ## Third party
