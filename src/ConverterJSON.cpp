@@ -19,7 +19,7 @@ ConverterJSON::ConverterJSON() {
     std::cout << "Version: " << versionOfProject << std::endl;
 }
 
-std::vector<std::string> ConverterJSON::GetRequests() {
+const std::vector<std::string> ConverterJSON::GetRequests() {
     std::ifstream requestsFile("requests.json");
     if (!requestsFile.is_open()) 
         throw std::runtime_error("request file is missing.");
@@ -33,7 +33,7 @@ std::vector<std::string> ConverterJSON::GetRequests() {
     return requestsJSON["requests"].get<std::vector<std::string>>();
 }
 
-uint32_t ConverterJSON::GetResponsesLimit() {
+const uint32_t ConverterJSON::GetResponsesLimit() {
     std::ifstream configFile("config.json");
     nlohmann::json configJSON;
     configFile >> configJSON;
@@ -41,7 +41,7 @@ uint32_t ConverterJSON::GetResponsesLimit() {
     return configJSON["config"]["max_responses"].get<uint32_t>();
 }
 
-void ConverterJSON::putAnswers(std::vector<std::vector<RelativeIndex>> answers) {
+const void ConverterJSON::putAnswers(std::vector<std::vector<RelativeIndex>> answers) {
     nlohmann::json answersJSON;
     for (size_t i = 0; const auto& doc: answers) {
         bool findResult = !(doc.empty());
@@ -59,11 +59,15 @@ void ConverterJSON::putAnswers(std::vector<std::vector<RelativeIndex>> answers) 
     }
 
     std::ofstream answerFile("answers.json");
+    if (!answerFile) {
+        throw std::runtime_error("answers file is not available.");
+    }
     answerFile << std::setw(4) << answersJSON;
     answerFile.close();
+    std::cout << "Done." << std::endl;
 }
 
-std::vector<std::string> ConverterJSON::GetTextDocuments() {
+const std::vector<std::string> ConverterJSON::GetTextDocuments() {
     std::ifstream configFile("config.json");
     nlohmann::json configJSON;
     configFile >> configJSON;

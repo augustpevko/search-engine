@@ -48,14 +48,14 @@ public:
      * @return Contents of .txt files.
      * 
      */
-    std::vector<std::string> GetTextDocuments();
+    const std::vector<std::string> GetTextDocuments();
 
     /**
      * @brief Get the Responses Limit count from config.json.
      * 
      * @return Responses Limit count from config.json 
      */
-    uint32_t GetResponsesLimit();
+    const uint32_t GetResponsesLimit();
 
     /**
      * @brief Get the Requests words from requests.json.
@@ -66,12 +66,14 @@ public:
      * if request file is missing,
      * if request file is empty.
      */
-    std::vector<std::string> GetRequests();
+    const std::vector<std::string> GetRequests();
     
     /**
      * @brief Put the Answers to answers.json.
      * 
-     * @param answers the docId is id of document. The rank is rank of relevance. 
+     * @param answers the docId is id of document. The rank is rank of relevance.
+     * 
+     * @throws It throws std::runtime_error if answer.json is not available. 
      */
-    void putAnswers(std::vector<std::vector<RelativeIndex>> answers);
+    const void putAnswers(std::vector<std::vector<RelativeIndex>> answers);
 };

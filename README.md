@@ -3,7 +3,8 @@
 Application for searching queries in local files.
 
 ### How it works
-1. User puts files location in `config.json`.
+All `.json` files are placed in `bin` directory.
+1. User puts files location in `config.json`. `.txt` files are placed in `/bin/txt` directory.
 2. User enters queries in `request.json`.
 3. User gets results in `answers.json`.
 

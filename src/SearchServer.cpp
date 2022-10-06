@@ -1,6 +1,13 @@
 #include "SearchServer.hpp"
 
-std::set<std::string> SearchServer::getUniqueWords(const std::string& request) {
+SearchServer::SearchServer(InvertedIndex* inInvertedIndex) {
+    if (inInvertedIndex == nullptr) {
+        throw std::runtime_error("invertedIndex point to nullptr");
+    }
+    inIndex = inInvertedIndex;
+}
+
+const std::set<std::string> SearchServer::getUniqueWords(const std::string& request) {
     std::set<std::string> uniqWords;
     std::istringstream iss(request, std::istringstream::in);
     for (std::string word; iss >> word;) {
@@ -55,11 +62,14 @@ bool SearchServer::makeStrict(std::vector<std::vector<Entry>>& entriesOfRequest,
     return false;
 }
 
-std::vector<std::vector<RelativeIndex>> SearchServer::search(const
+const std::vector<std::vector<RelativeIndex>> SearchServer::search(const
         std::vector<std::string>& queriesInput) {
+    
     std::vector<std::vector<RelativeIndex>> answers(queriesInput.size());
+
     for (size_t reqNum = 0; const auto& req: queriesInput) {
         std::set<std::string> uniqWords = getUniqueWords(req);
+
         std::vector<std::vector<Entry>> entriesOfRequest(uniqWords.size());
         for (size_t i = 0; const auto& word: uniqWords) {
             entriesOfRequest[i] = {inIndex->GetWordEntries(word)};
@@ -96,6 +106,7 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const
             }
             absRank[id] = {sum};        
         }
+
         auto maxCount = *std::max_element(absRank.begin(), absRank.end());
         for (size_t i = 0; i != absRank.size(); i++) {
             answers[reqNum].push_back({i, float(absRank[i]) / float(maxCount)});

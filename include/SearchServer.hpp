@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <sstream>
 #include <set>
+#include <exception>
 
 #include "InvertedIndex.hpp"
 
@@ -34,8 +35,11 @@ public:
      * 
      * @param idx pointer to InvertedIndex object to get frequency
      * of words.
+     * 
+     * @throws It throws std::runtime_error if invertedIndex point
+     * to nullptr.
      */
-    SearchServer(InvertedIndex* idx) : inIndex(idx) { };
+    SearchServer(InvertedIndex* inInvertedIndex);
    
     /**
      * @brief Method of processing search queries.
@@ -44,7 +48,7 @@ public:
      * @return answers are entered by calling the putAnswers method.
      * index of vector is id of .txt file. Internal vector sorted by rank. 
      */
-    std::vector<std::vector<RelativeIndex>> search(const
+    const std::vector<std::vector<RelativeIndex>> search(const
         std::vector<std::string>& queriesInput);
 private:
     /**
@@ -53,7 +57,7 @@ private:
      * @param request words.
      * @return unique words with lowercase letters. 
      */
-    std::set<std::string> getUniqueWords(const std::string& request);
+    const std::set<std::string> getUniqueWords(const std::string& request);
 
     /**
      * @brief relevance is calculated only if all the words from the query exist in the document.
