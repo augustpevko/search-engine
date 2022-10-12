@@ -1,4 +1,5 @@
 #include "ConverterJSON.hpp"
+#include "SearchServer.hpp"
 
 ConverterJSON::ConverterJSON() {
     std::ifstream configFile("config.json");

@@ -10,8 +10,6 @@
 #include <exception>
 #include <iostream>
 
-#include "simple-thread-pull.hpp"
-
 /**
  * @brief It stores document id and count of entries.
  * 

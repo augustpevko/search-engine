@@ -1,10 +1,16 @@
 #include "SearchServer.hpp"
+#include "InvertedIndex.hpp"
+#include "ConverterJSON.hpp"
 
-SearchServer::SearchServer(InvertedIndex* inInvertedIndex) {
+SearchServer::SearchServer(InvertedIndex* inInvertedIndex, uint32_t inMaxResponses) {
     if (inInvertedIndex == nullptr)
         throw std::runtime_error("invertedIndex point to nullptr");
 
     inIndex = inInvertedIndex;
+    
+    if (inMaxResponses <= 0)
+        throw std::runtime_error("invalid responses limit");
+    maxResponses = inMaxResponses;
 }
 
 std::set<std::string> SearchServer::getUniqueWords(const std::string& request) const {
@@ -16,48 +22,6 @@ std::set<std::string> SearchServer::getUniqueWords(const std::string& request) c
         uniqWords.emplace(word);
     }
     return uniqWords;
-}
-
-bool SearchServer::makeStrict(std::vector<std::vector<Entry>>& entriesOfRequest,
-    std::vector<size_t>& docIds,
-    size_t& reqNum) const {
-
-    for (size_t i = 0; i < docIds.size(); i++)
-        docIds[i] = entriesOfRequest[0][i].docId;
-
-    for (size_t i = 1; i < entriesOfRequest.size(); i++) {
-        auto entries{entriesOfRequest[i]};
-        docIds.erase(std::remove_if(docIds.begin(), docIds.end(),
-            [entries](auto it) {
-                bool find{false};
-                for (const auto& ent: entries) {
-                    if (ent.docId == it) 
-                        find = true;
-                }
-                return !find;
-            }), docIds.end());
-        if (docIds.empty())
-            break;
-    }
-    if (docIds.empty()) {
-        reqNum++;
-        return true;
-    }
-    for (size_t i = 1; i < entriesOfRequest.size(); i++) {
-        auto entries{entriesOfRequest[i]};
-        entries.erase(std::remove_if(entries.begin(), entries.end(),
-            [docIds](auto it) {
-                bool find{false};
-                for (const auto& id: docIds) {
-                    if (id == it.docId) {
-                        find = true;
-                        break;
-                    }
-                }
-                return find;
-            }), entries.end());
-    }
-    return false;
 }
 
 std::vector<std::vector<RelativeIndex>> SearchServer::search(const
@@ -74,44 +38,36 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const
             i++;
         }
 
-        std::sort(entriesOfRequest.begin(),
-            entriesOfRequest.end(),
-            [](std::vector<Entry> first, std::vector<Entry> second) {
-                size_t sumFirst{0};
-                for (const auto& ent: first) 
-                    sumFirst += ent.count;
-
-                size_t sumSecond{0};
-                for (const auto& ent: second)
-                    sumSecond += ent.count;
-
-                return sumFirst < sumSecond;
-            });
-        std::vector<size_t> docIds(entriesOfRequest[0].size());
-        bool isEmpty = makeStrict(entriesOfRequest, docIds, reqNum);
-        if (isEmpty)
-            continue;
-            
-        std::vector<size_t> absRank(docIds.size());
-        for (const auto& id: docIds) {
-            size_t sum{0};
-            for (const auto& entrs: entriesOfRequest) {
-                for (const auto& ent: entrs) {
-                    if (ent.docId == id)
-                        sum += ent.count;
-                }
+        std::map<size_t, size_t> absRank;
+        for (const auto& entrs: entriesOfRequest) {
+            for (const auto& ent: entrs) {
+                if (absRank.contains(ent.docId))
+                    absRank[ent.docId] += ent.count;
+                else
+                    absRank[ent.docId] = ent.count;
             }
-            absRank[id] = {sum};
         }
-
-        auto maxCount = *std::max_element(absRank.begin(), absRank.end());
-        for (size_t i = 0; i != absRank.size(); i++)
-            answers[reqNum].push_back({i, float(absRank[i]) / float(maxCount)});
-
-        std::sort(answers[reqNum].begin(), answers[reqNum].end(),
+        if (absRank.empty()) {
+            reqNum++;
+            continue;
+        }
+        answers[reqNum].resize(absRank.size());
+        for (size_t i = 0; const auto& [key, value]: absRank) {
+            answers[reqNum][i].docId = key;
+            answers[reqNum][i].rank = value;
+            i++;
+        }
+        std::stable_sort(answers[reqNum].begin(), answers[reqNum].end(),
             [](auto firstI, auto secondI) {
                 return firstI.rank > secondI.rank;
             });
+        if (absRank.size() > maxResponses)
+            answers[reqNum].erase(answers[reqNum].begin() + maxResponses, answers[reqNum].end());
+        auto maxElem = answers[reqNum][0].rank;
+
+        for (auto& ent: answers[reqNum]) {
+            ent.rank /= maxElem;
+        }
         reqNum++;
     }
     return answers;

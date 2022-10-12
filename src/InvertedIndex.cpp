@@ -1,4 +1,5 @@
 #include "InvertedIndex.hpp"
+#include "simple-thread-pull.hpp"
 
 InvertedIndex::InvertedIndex(const std::vector<std::string>& input_docs) {
     UpdateDocumentBase(input_docs);

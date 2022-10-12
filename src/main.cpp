@@ -8,6 +8,6 @@
 int main() {
     ConverterJSON converterJSON;
     InvertedIndex invertedIndex(converterJSON.GetTextDocuments());
-    SearchServer searchServer(&invertedIndex);
+    SearchServer searchServer(&invertedIndex, converterJSON.GetResponsesLimit());
     converterJSON.putAnswers(searchServer.search(converterJSON.GetRequests()));
 }

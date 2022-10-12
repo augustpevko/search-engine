@@ -7,10 +7,9 @@
 #include <set>
 #include <exception>
 
-#include "InvertedIndex.hpp"
-
 class InvertedIndex;
 
+struct Entry;
 
 /**
  * @brief It stores document id and relative rank.
@@ -33,13 +32,14 @@ public:
     /**
      * @brief Construct a new Search Server object.
      * 
-     * @param idx pointer to InvertedIndex object to get frequency
+     * @param inInvertedIndex pointer to InvertedIndex object to get frequency
      * of words.
+     * @param inMaxResponses count of max responses from GetResponsesLimit() method.
      * 
      * @throws It throws std::runtime_error if invertedIndex point
      * to nullptr.
      */
-    SearchServer(InvertedIndex* inInvertedIndex);
+    SearchServer(InvertedIndex* inInvertedIndex, uint32_t inMaxResponses);
    
     /**
      * @brief Method of processing search queries.
@@ -73,4 +73,5 @@ private:
                               std::vector<size_t>& docIds,
                               size_t& reqNum) const;
     InvertedIndex* inIndex;
+    size_t maxResponses;
 };

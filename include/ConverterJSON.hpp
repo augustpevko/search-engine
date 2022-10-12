@@ -9,8 +9,9 @@
 #include <thread>
 
 #include "nlohmann/json.hpp"
-#include "SearchServer.hpp"
 #include "config.hpp"
+
+struct RelativeIndex;
 
 /**
  * @brief Class for handle JSON files.
