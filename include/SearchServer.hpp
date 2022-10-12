@@ -48,8 +48,8 @@ public:
      * @return answers are entered by calling the putAnswers method.
      * index of vector is id of .txt file. Internal vector sorted by rank. 
      */
-    const std::vector<std::vector<RelativeIndex>> search(const
-        std::vector<std::string>& queriesInput);
+    std::vector<std::vector<RelativeIndex>> search(const
+        std::vector<std::string>& queriesInput) const;
 private:
     /**
      * @brief To get unique words from string of words.
@@ -57,7 +57,7 @@ private:
      * @param request words.
      * @return unique words with lowercase letters. 
      */
-    const std::set<std::string> getUniqueWords(const std::string& request);
+    std::set<std::string> getUniqueWords(const std::string& request) const;
 
     /**
      * @brief relevance is calculated only if all the words from the query exist in the document.
@@ -71,6 +71,6 @@ private:
      */
     bool makeStrict(std::vector<std::vector<Entry>>& entriesOfRequest,    
                               std::vector<size_t>& docIds,
-                              size_t& reqNum);
+                              size_t& reqNum) const;
     InvertedIndex* inIndex;
 };

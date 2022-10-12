@@ -12,9 +12,6 @@
 #include "SearchServer.hpp"
 #include "config.hpp"
 
-
-struct RelativeIndex;
-
 /**
  * @brief Class for handle JSON files.
  * 
@@ -48,14 +45,14 @@ public:
      * @return Contents of .txt files.
      * 
      */
-    const std::vector<std::string> GetTextDocuments();
+    std::vector<std::string> GetTextDocuments() const;
 
     /**
      * @brief Get the Responses Limit count from config.json.
      * 
      * @return Responses Limit count from config.json 
      */
-    const uint32_t GetResponsesLimit();
+    uint32_t GetResponsesLimit() const;
 
     /**
      * @brief Get the Requests words from requests.json.
@@ -66,7 +63,7 @@ public:
      * if request file is missing,
      * if request file is empty.
      */
-    const std::vector<std::string> GetRequests();
+    std::vector<std::string> GetRequests() const;
     
     /**
      * @brief Put the Answers to answers.json.
@@ -75,5 +72,5 @@ public:
      * 
      * @throws It throws std::runtime_error if answer.json is not available. 
      */
-    const void putAnswers(std::vector<std::vector<RelativeIndex>> answers);
+    void putAnswers(std::vector<std::vector<RelativeIndex>> answers) const;
 };

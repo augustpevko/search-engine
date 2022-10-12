@@ -55,7 +55,7 @@ public:
      * @param word that is being requested. 
      * @return Vector of document id and count of entries struct.
      */
-    const std::vector<Entry> GetWordEntries(const std::string& word);
+    std::vector<Entry> GetWordEntries(const std::string& word);
 
 private:
     /**

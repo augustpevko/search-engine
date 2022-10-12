@@ -19,7 +19,7 @@ ConverterJSON::ConverterJSON() {
     std::cout << "Version: " << versionOfProject << std::endl;
 }
 
-const std::vector<std::string> ConverterJSON::GetRequests() {
+std::vector<std::string> ConverterJSON::GetRequests() const {
     std::ifstream requestsFile("requests.json");
     if (!requestsFile.is_open()) 
         throw std::runtime_error("request file is missing.");
@@ -33,15 +33,20 @@ const std::vector<std::string> ConverterJSON::GetRequests() {
     return requestsJSON["requests"].get<std::vector<std::string>>();
 }
 
-const uint32_t ConverterJSON::GetResponsesLimit() {
+uint32_t ConverterJSON::GetResponsesLimit() const {
     std::ifstream configFile("config.json");
+    if (!configFile.is_open()) 
+        throw std::runtime_error("config file is missing.");       
+    if (configFile.peek() == EOF) 
+        throw std::runtime_error("config file is empty.");
+    
     nlohmann::json configJSON;
     configFile >> configJSON;
     configFile.close();
     return configJSON["config"]["max_responses"].get<uint32_t>();
 }
 
-const void ConverterJSON::putAnswers(std::vector<std::vector<RelativeIndex>> answers) {
+void ConverterJSON::putAnswers(std::vector<std::vector<RelativeIndex>> answers) const {
     nlohmann::json answersJSON;
     for (size_t i = 0; const auto& doc: answers) {
         bool findResult = !(doc.empty());
@@ -59,16 +64,20 @@ const void ConverterJSON::putAnswers(std::vector<std::vector<RelativeIndex>> ans
     }
 
     std::ofstream answerFile("answers.json");
-    if (!answerFile) {
+    if (!answerFile)
         throw std::runtime_error("answers file is not available.");
-    }
     answerFile << std::setw(4) << answersJSON;
     answerFile.close();
     std::cout << "Done." << std::endl;
 }
 
-const std::vector<std::string> ConverterJSON::GetTextDocuments() {
+std::vector<std::string> ConverterJSON::GetTextDocuments() const {
     std::ifstream configFile("config.json");
+    if (!configFile.is_open()) 
+        throw std::runtime_error("config file is missing.");       
+    if (configFile.peek() == EOF) 
+        throw std::runtime_error("config file is empty.");
+    
     nlohmann::json configJSON;
     configFile >> configJSON;
     configFile.close();

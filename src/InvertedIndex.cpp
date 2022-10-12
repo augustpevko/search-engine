@@ -5,9 +5,8 @@ InvertedIndex::InvertedIndex(const std::vector<std::string>& input_docs) {
 }
 
 void InvertedIndex::IndexWords(size_t docId, InvertedIndex* invertedIndex) {
-    if (invertedIndex == nullptr) {
+    if (invertedIndex == nullptr)
         throw std::runtime_error("invertedIndex point to nullptr");
-    }
 
     std::string txtFile = invertedIndex->docs[docId];
 
@@ -24,9 +23,8 @@ void InvertedIndex::IndexWords(size_t docId, InvertedIndex* invertedIndex) {
                 break;
             }
         }
-        if (!find) {
+        if (!find)
             invertedIndex->freqDictionary[word].push_back(Entry({docId, 1}));
-        }
     }
 }
 
@@ -40,13 +38,13 @@ void InvertedIndex::UpdateDocumentBase(const std::vector<std::string>& input_doc
     freqDictionary.clear();
 
     ThreadPool threadPool;
-    for (size_t i = 0; i < docs.size(); i++) {
+    for (size_t i = 0; i < docs.size(); i++)
         threadPool.addTask(&InvertedIndex::IndexWords, i, this);
-    }
+
     threadPool.waitAll();
 }
 
-const std::vector<Entry> InvertedIndex::GetWordEntries(const std::string& word) {
+std::vector<Entry> InvertedIndex::GetWordEntries(const std::string& word) {
     std::lock_guard<std::mutex> lock(mainMutex);
     return freqDictionary[word];
 }

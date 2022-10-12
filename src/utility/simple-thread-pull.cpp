@@ -1,18 +1,17 @@
 #include "simple-thread-pull.hpp"
 
-ThreadPool::ThreadPool(): maxThreads(std::thread::hardware_concurrency()) {       
+ThreadPool::ThreadPool(): maxThreads(std::thread::hardware_concurrency()),  
+                          quite(false) {       
     threads.reserve(maxThreads);
-    for (uint32_t i = 0; i < maxThreads; i++) {
+    for (uint32_t i = 0; i < maxThreads; i++)
         threads.emplace_back(&ThreadPool::ThreadLoop, this);
-    }
 }
 
 ThreadPool::~ThreadPool() {
     quite = true;
     qCv.notify_all();
-    for (auto& t: threads) {
+    for (auto& t: threads)
         t.join();
-    }
 }
 
 void ThreadPool::ThreadLoop() {
@@ -31,13 +30,11 @@ void ThreadPool::ThreadLoop() {
 void ThreadPool::waitAll() {
     quite = true;
     qCv.notify_all();
-    for (auto& t: threads) {
+    for (auto& t: threads)
         t.join();
-    }
     quite = false;
     threads.clear();
 
-    for (uint32_t i = 0; i < maxThreads; i++) {
+    for (uint32_t i = 0; i < maxThreads; i++)
         threads.emplace_back(&ThreadPool::ThreadLoop, this);
-    }
 }

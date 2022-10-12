@@ -9,8 +9,6 @@
 
 #include "config.hpp"
 
-using Func = std::function<void ()>;
-
 /**
  * @brief The ThreadPool class implements thread pool pattern.
  * It was written for concurrency of inverted index class.
@@ -66,10 +64,10 @@ private:
      */
     void ThreadLoop();
 
-    size_t maxThreads{1};
-    std::atomic<bool> quite{false};
+    size_t maxThreads;
+    std::atomic<bool> quite;
     std::mutex qMutex;                 
     std::condition_variable qCv; 
     std::vector<std::thread> threads;
-    std::queue<Func> tasks;
+    std::queue<std::function<void ()>> tasks;
 };
