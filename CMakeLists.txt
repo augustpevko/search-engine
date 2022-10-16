@@ -2,7 +2,10 @@ cmake_minimum_required(VERSION 3.0.0)
 project(searchEngine VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 20)
 
-set(VERSION "0.1.0")
+set(VERSION_OF_CONFIG "0.1.0")
+set(NAME_OF_CONFIG_FILE "config.json")
+set(NAME_OF_ANSWERS_FILE "answers.json")
+set(NAME_OF_REQUESTS_FILE "requests.json")
 
 configure_file (config.h.in ${CMAKE_CURRENT_SOURCE_DIR}/include/config.hpp @ONLY)
 

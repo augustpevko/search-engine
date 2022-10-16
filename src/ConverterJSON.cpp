@@ -1,31 +1,32 @@
 #include "ConverterJSON.hpp"
 #include "SearchServer.hpp"
+#include "config.hpp"
 
 ConverterJSON::ConverterJSON() {
-    std::ifstream configFile("config.json");
+    std::ifstream configFile(NAME_OF_CONFIG_FILE);
     if (!configFile.is_open()) 
-        throw std::runtime_error("config file is missing.");       
+        throw std::runtime_error(IS_MISSING_MSG(NAME_OF_CONFIG_FILE));       
     if (configFile.peek() == EOF) 
-        throw std::runtime_error("config file is empty.");
+        throw std::runtime_error(IS_EMPTY_MSG(NAME_OF_CONFIG_FILE));
 
     nlohmann::json configJSON;
     configFile >> configJSON;
     configFile.close();
 
     auto versionOfProject = configJSON["config"]["version"].get<std::string>();
-    if (versionOfProject != VERSION)
-        throw std::runtime_error("config.json has incorrect file version");
+    if (versionOfProject != VERSION_OF_CONFIG)
+        throw std::runtime_error(IS_INCORRECT_VERSION_MSG(NAME_OF_CONFIG_FILE));
     
     std::cout << configJSON["config"]["name"].get<std::string>() << " has just launched." << std::endl;
     std::cout << "Version: " << versionOfProject << std::endl;
 }
 
 std::vector<std::string> ConverterJSON::GetRequests() const {
-    std::ifstream requestsFile("requests.json");
+    std::ifstream requestsFile(NAME_OF_REQUESTS_FILE);
     if (!requestsFile.is_open()) 
-        throw std::runtime_error("request file is missing.");
+        throw std::runtime_error(IS_MISSING_MSG(NAME_OF_REQUESTS_FILE));
     if (requestsFile.peek() == EOF) 
-        throw std::runtime_error("request file is empty.");
+        throw std::runtime_error(IS_EMPTY_MSG(NAME_OF_REQUESTS_FILE));
     
     nlohmann::json requestsJSON;
     requestsFile >> requestsJSON;
@@ -35,11 +36,11 @@ std::vector<std::string> ConverterJSON::GetRequests() const {
 }
 
 uint32_t ConverterJSON::GetResponsesLimit() const {
-    std::ifstream configFile("config.json");
+    std::ifstream configFile(NAME_OF_CONFIG_FILE);
     if (!configFile.is_open()) 
-        throw std::runtime_error("config file is missing.");       
+        throw std::runtime_error(IS_MISSING_MSG(NAME_OF_CONFIG_FILE));       
     if (configFile.peek() == EOF) 
-        throw std::runtime_error("config file is empty.");
+        throw std::runtime_error(IS_EMPTY_MSG(NAME_OF_CONFIG_FILE));
     
     nlohmann::json configJSON;
     configFile >> configJSON;
@@ -64,20 +65,20 @@ void ConverterJSON::putAnswers(std::vector<std::vector<RelativeIndex>> answers) 
         i++;
     }
 
-    std::ofstream answerFile("answers.json");
+    std::ofstream answerFile(NAME_OF_ANSWERS_FILE);
     if (!answerFile)
-        throw std::runtime_error("answers file is not available.");
+        throw std::runtime_error(IS_NOT_AVAILABLE_MSG(NAME_OF_ANSWERS_FILE));
     answerFile << std::setw(4) << answersJSON;
     answerFile.close();
     std::cout << "Done." << std::endl;
 }
 
 std::vector<std::string> ConverterJSON::GetTextDocuments() const {
-    std::ifstream configFile("config.json");
+    std::ifstream configFile(NAME_OF_CONFIG_FILE);
     if (!configFile.is_open()) 
-        throw std::runtime_error("config file is missing.");       
+        throw std::runtime_error(IS_MISSING_MSG(NAME_OF_CONFIG_FILE));       
     if (configFile.peek() == EOF) 
-        throw std::runtime_error("config file is empty.");
+        throw std::runtime_error(IS_EMPTY_MSG(NAME_OF_CONFIG_FILE));
     
     nlohmann::json configJSON;
     configFile >> configJSON;

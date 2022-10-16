@@ -9,7 +9,6 @@
 #include <thread>
 
 #include "nlohmann/json.hpp"
-#include "config.hpp"
 
 struct RelativeIndex;
 
