@@ -5,7 +5,7 @@
 #include <sstream>
 #include <algorithm>
 #include <cctype>
-#include <map>
+#include <unordered_map>
 #include <mutex>
 #include <exception>
 #include <iostream>
@@ -69,6 +69,6 @@ private:
     static void IndexWords(size_t docId, InvertedIndex* invertedIndex);
 
     std::vector<std::string> docs;
-    std::map<std::string, std::vector<Entry>> freqDictionary;
+    std::unordered_map<std::string, std::vector<Entry>> freqDictionary;
     std::mutex mainMutex;
 };
