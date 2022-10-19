@@ -58,20 +58,7 @@ private:
      * @return unique words with lowercase letters. 
      */
     std::set<std::string> getUniqueWords(const std::string& request) const;
-
-    /**
-     * @brief relevance is calculated only if all the words from the query exist in the document.
-     * This is if you would used quotation marks for each word in query.
-     * 
-     * @param entriesOfRequest entries of words in request. 
-     * @param docIds vector to store only the necessary documents id.
-     * @param reqNum index of request.
-     * @return true if docIds is empty.
-     * @return false if docIds isn't empty.
-     */
-    bool makeStrict(std::vector<std::vector<Entry>>& entriesOfRequest,    
-                              std::vector<size_t>& docIds,
-                              size_t& reqNum) const;
+    
     InvertedIndex* inIndex;
     size_t maxResponses;
 };
