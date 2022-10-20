@@ -30,6 +30,12 @@ struct Entry {
 class InvertedIndex {
 public:
 
+    InvertedIndex(const InvertedIndex &) = delete;
+    InvertedIndex(InvertedIndex &&) = delete;
+
+    InvertedIndex& operator=(const InvertedIndex &) = delete;
+    InvertedIndex& operator=(InvertedIndex &&) = delete;
+
     /**
      * @brief Construct a new Inverted Index object.
      * It calls UpdateDocumentBase method.

@@ -29,6 +29,13 @@ struct RelativeIndex {
  */
 class SearchServer {
 public:
+
+    SearchServer(const SearchServer &) = delete;
+    SearchServer(SearchServer &&) = delete;
+
+    SearchServer& operator=(const SearchServer &) = delete;
+    SearchServer& operator=(SearchServer &&) = delete;
+
     /**
      * @brief Construct a new Search Server object.
      * 
