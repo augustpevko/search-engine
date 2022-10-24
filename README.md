@@ -29,8 +29,7 @@ mkdir build && cd build
 ```
 cmake .. && cmake --build . --config Release --target searchEngine
 ```
-- The execution file will be placed in the `bin` directory.
-- Search engine uses multithreading to index words. You can use key `-j[N]` to allow N jobs at once. 
+- The execution file will be placed in the `bin` directory. 
 ## How to build googleTests.
 1. Create directory for build:
 ```
